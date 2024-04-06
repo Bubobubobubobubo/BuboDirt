@@ -23,9 +23,9 @@ live coding them requires that you have your SuperDirt instance in an environmen
 
 		var name = format("dirt_sample_%_%", sampleNumChannels, numChannels);
 
-		SynthDef(name, { |out, bufnum, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0|
+		SynthDef(name, { |out, bufnum, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0, base = 5, width= 22000|
 
-			var sound, rate, phase, sawrate, numFrames;
+			var sound, rate, phase, sawrate, numFrames, lowPassFreq, highPassFreq;
 
 			// playback speed
 			rate = Line.kr(speed, endSpeed, sustain) * (freq / 60.midicps);
@@ -47,6 +47,11 @@ live coding them requires that you have your SuperDirt instance in an environmen
 				interpolation: 4 // cubic interpolation
 			);
 
+      highPassFreq = base;
+      lowPassFreq = base + width;
+      sound = HPF.ar(sound, highPassFreq);
+      sound = LPF.ar(sound, lowPassFreq);
+
 			sound = DirtPan.ar(sound, numChannels, pan);
 
 			Out.ar(out, sound)
@@ -62,9 +67,9 @@ live coding them requires that you have your SuperDirt instance in an environmen
 
 		var name = format("dirt_sample_long_%_%", sampleNumChannels, numChannels);
 
-		SynthDef(name, { |out, bufnum, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0|
+		SynthDef(name, { |out, bufnum, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0, base=5, width = 22000|
 
-			var sound, rate,  env, startPos, numFrames;
+			var sound, rate,  env, startPos, numFrames, lowPassFreq, highPassFreq;
 
 			// playback speed
 			rate = Line.kr(speed, endSpeed, sustain) * (freq / 60.midicps);
@@ -92,6 +97,11 @@ live coding them requires that you have your SuperDirt instance in an environmen
 
 			sound = sound * env;
 
+
+      highPassFreq = base;
+      lowPassFreq = base + width;
+      sound = HPF.ar(sound, highPassFreq);
+      sound = LPF.ar(sound, lowPassFreq);
 			sound = DirtPan.ar(sound, numChannels, pan);
 
 			Out.ar(out, sound)
@@ -105,10 +115,10 @@ live coding them requires that you have your SuperDirt instance in an environmen
 
 		var name = format("dirt_stretchsample_%_%", sampleNumChannels, numChannels);
 
-		SynthDef(name, { |out, bufnum, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0, timescale = 1, timescalewin = 1|
+		SynthDef(name, { |out, bufnum, sustain = 1, begin = 0, end = 1, speed = 1, endSpeed = 1, freq = 440, pan = 0, timescale = 1, timescalewin = 1, base = 5, width = 22000|
 
 			var sound, rate, phase, sawrate, numFrames, index, windowIndex, window, timescaleStep;
-			var sound0, sound1, windowSize, nSteps;
+			var sound0, sound1, windowSize, nSteps, highPassFreq, lowPassFreq;
 
 			// playback speed
 			rate = Line.kr(speed, endSpeed, sustain) * (freq / 60.midicps);
@@ -147,6 +157,7 @@ live coding them requires that you have your SuperDirt instance in an environmen
 				loop: 0,
 				interpolation: 4 // cubic interpolation
 			);
+	
 			sound1 = window[1] * BufRd.ar(
 				numChannels: sampleNumChannels,
 				bufnum: bufnum,
@@ -156,6 +167,10 @@ live coding them requires that you have your SuperDirt instance in an environmen
 			);
 			sound = (sound0 + sound1) / window.sum;
 
+      highPassFreq = base;
+      lowPassFreq = base + width;
+      sound = HPF.ar(sound, highPassFreq);
+      sound = LPF.ar(sound, lowPassFreq);
 			sound = DirtPan.ar(sound, numChannels, pan);
 
 			Out.ar(out, sound)

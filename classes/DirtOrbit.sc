@@ -186,10 +186,11 @@ DirtOrbit {
 			~loop = 1.0;
 			~dry = 0.0;
 			~lock = 0; // if set to 1, syncs delay times with cps
+      ~base = 5;
+      ~width = 22000;
 
 			~amp = 0.4;
 			~fadeTime = 0.001;
-
 
 			// values from the dirt bus
 			~orbit = this;

@@ -48,6 +48,8 @@ this may be refacored later.
 					begin: ~begin,
 					end: ~end,
 					pan: ~pan,
+          base: ~base,
+          width: ~width,
 					out: ~out
 				];
 

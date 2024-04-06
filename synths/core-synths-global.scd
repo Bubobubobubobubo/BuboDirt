@@ -147,7 +147,7 @@ CORE SYNTHDEFS FOR DIRT
       env = EnvGen.kr(Env.asr, gate, doneAction: 2);
       mixedSignal = mixedSignal * env;
       Out.ar(effectBus, mixedSignal);
-  }).add;
+  }, [\ir, \ir]).add;
 
 	// "leslie" controls dry/wet
 	// "lrate" is the modulation rate (typical vintage rates would be 6.7 for "fast", 0.7 for "slow")
