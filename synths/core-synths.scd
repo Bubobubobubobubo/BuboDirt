@@ -48,7 +48,7 @@ live coding them requires that you have your SuperDirt instance in an environmen
 			);
 
       highPassFreq = base;
-      lowPassFreq = base + width;
+      lowPassFreq = (base + width).clip(s.sampleRate / 2);
       sound = HPF.ar(sound, highPassFreq);
       sound = LPF.ar(sound, lowPassFreq);
 
@@ -99,7 +99,7 @@ live coding them requires that you have your SuperDirt instance in an environmen
 
 
       highPassFreq = base;
-      lowPassFreq = base + width;
+      lowPassFreq = (base + width).clip(s.sampleRate / 2);
       sound = HPF.ar(sound, highPassFreq);
       sound = LPF.ar(sound, lowPassFreq);
 			sound = DirtPan.ar(sound, numChannels, pan);
@@ -168,7 +168,7 @@ live coding them requires that you have your SuperDirt instance in an environmen
 			sound = (sound0 + sound1) / window.sum;
 
       highPassFreq = base;
-      lowPassFreq = base + width;
+      lowPassFreq = (base + width).clip(s.sampleRate / 2);
       sound = HPF.ar(sound, highPassFreq);
       sound = LPF.ar(sound, lowPassFreq);
 			sound = DirtPan.ar(sound, numChannels, pan);
