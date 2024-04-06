@@ -235,7 +235,6 @@ live coding them requires that you have your SuperDirt instance in an environmen
 		voweled = BPF.ar([signal], vowelFreqs, vowelRqs, vowelAmps).sum;
 		//voweled = Formlet.ar(signal, vowelFreqs, 0.005, vowelRqs, vowelAmps).sum;
 		signal = XFade2.ar(signal, voweled, resonance.linlin(0, 1, -0.5, 1), 0.25);
-
 		ReplaceOut.ar(out, signal);
 
 	}, [\ir]).add;
@@ -245,6 +244,21 @@ live coding them requires that you have your SuperDirt instance in an environmen
 		signal = signal.round(0.5 ** (crush-1));
 		ReplaceOut.ar(out, signal)
 	}, [\ir, \kr]).add;
+
+  SynthDef("dirt_analog_tape" ++ numChannels, { |out,
+      bias = 0.5, tape = 0.5, tapeDrive = 1,
+      oversample = 1|
+      var signal = In.ar(out, numChannels);
+      signal = AnalogTape.ar(
+          signal,
+          bias: bias,
+          saturation: tape,
+          drive: tapeDrive,
+          oversample: oversample,
+          mode: 0 // RK2 (2nd order Runge Kutta) for the cheapest CPU option
+      );
+      ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr, \ir]).add;
 
 	SynthDef("dirt_coarse" ++ numChannels, { |out, coarse = 0, bandq = 10|
 		var signal = In.ar(out, numChannels);

@@ -103,8 +103,20 @@ this may be refacored later.
 				shape: ~shape,
 				out: ~out
 		])
-
 }, { ~shape.notNil });
+
+
+~dirt.addModule('tape',
+	{ |dirtEvent|
+		dirtEvent.sendSynth("dirt_analog_tape" ++ ~numChannels,
+			[
+				saturation: ~tape,
+        tapeDrive: ~tapeDrive,
+        bias: ~bias,
+        oversample: ~oversample,
+				out: ~out
+		])
+}, { ~tape.notNil });
 
 ~dirt.addModule('hpf',
 	{ |dirtEvent|
