@@ -187,7 +187,7 @@ DirtOrbit {
 			~dry = 0.0;
 			~lock = 0; // if set to 1, syncs delay times with cps
       ~base = 5;
-      ~width = s.sampleRate / 2;
+      ~width = server.sampleRate / 2;
 
 			~amp = 0.4;
 			~fadeTime = 0.001;

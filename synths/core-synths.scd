@@ -266,41 +266,59 @@ live coding them requires that you have your SuperDirt instance in an environmen
 		ReplaceOut.ar(out, signal)
 	}, [\ir, \kr, \kr]).add;
 
-  SynthDef("dirt_hpf" ++ numChannels, { |
-      out, hcutoff = 440, cutoffTarget = 880,
-      fattack=0.01, fdecay = 0.5, hresonance = 0|
+  SynthDef("dirt_lpf" ++ numChannels, { |
+      out, cutoff = 440, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 0 |
     var signal = In.ar(out, numChannels);
     var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
-    var cutoffEnv = LinLin.kr(env, 0, 1, hcutoff, cutoffTarget);
-    signal = RHPF.ar(
-      signal,
-      cutoffEnv.abs.clip(20, SampleRate.ir / 2),
-      hresonance.linexp(0, 1, 1, 0.001)
-    );
-    ReplaceOut.ar(out, signal)
+    var nyquist = SampleRate.ir / 2;
+    var cutoffMin = 10;
+    var cutoffMax = nyquist;
+    var cutoffRange, cutoffTarget, cutoffEnv;
+    cutoffRange = sweep.linlin(-1, 1, cutoffMin - cutoff, cutoffMax - cutoff);
+    cutoffTarget = cutoff + cutoffRange * sweep;
+    cutoffTarget = cutoffTarget.clip(cutoffMin, cutoffMax);
+    cutoffEnv = LinLin.kr(env, 0, 1, cutoff, cutoffTarget);
+    cutoffEnv = cutoffEnv.abs.clip(cutoffMin, nyquist);
+    signal = RLPF.ar(signal, cutoffEnv, resonance.linexp(0, 1, 1, 0.001));
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+
+  SynthDef("dirt_hpf" ++ numChannels, { |
+      out, hcutoff = 440, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, hresonance = 0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var cutoffMin = 20; // Define a reasonable minimum for HPF
+    var cutoffMax = nyquist;
+    var cutoffRange, cutoffTarget, cutoffEnv;
+    cutoffRange = sweep.linlin(-1, 1, cutoffMin - hcutoff, cutoffMax - hcutoff);
+    cutoffTarget = hcutoff + cutoffRange * sweep;
+    cutoffTarget = cutoffTarget.clip(cutoffMin, cutoffMax);
+    cutoffEnv = LinLin.kr(env, 0, 1, hcutoff, cutoffTarget);
+    cutoffEnv = cutoffEnv.abs.clip(cutoffMin, nyquist);
+    signal = RHPF.ar(signal, cutoffEnv, hresonance.linexp(0, 1, 1, 0.001));
+    ReplaceOut.ar(out, signal);
   }, [\ir, \kr, \kr, \kr]).add;
 
   SynthDef("dirt_bpf" ++ numChannels, { |
-      out, bandqf = 440, cutoffTarget = 880,
-      fattack=0.01, fdecay = 0.5, bandq = 10|
+      out, bandqf = 440, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, bandq = 10|
     var signal = In.ar(out, numChannels);
     var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
-    var freqEnv = LinLin.kr(env, 0, 1, bandqf, cutoffTarget);
-    bandq = max(1, bandq);
-    freqEnv = freqEnv.clip(20, SampleRate.ir / 2);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20; // Define a reasonable minimum for BPF
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    bandq = max(1, bandq); // Ensure bandq is at least 1
+    freqRange = sweep.linlin(-1, 1, freqMin - bandqf, freqMax - bandqf);
+    freqTarget = bandqf + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, bandqf, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
     signal = BPF.ar(signal, freqEnv, 1/bandq) * max(bandq, 1.0);
-    ReplaceOut.ar(out, signal)
-  }, [\ir, \kr, \kr, \kr]).add;
-
-  SynthDef("dirt_lpf" ++ numChannels, { |
-      out, cutoff = 440, cutoffTarget = 880,
-      fattack=0.01, fdecay = 0.5, resonance = 0|
-    var signal = In.ar(out, numChannels);
-    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
-    var cutoffEnv = LinLin.kr(env, 0, 1, cutoff, cutoffTarget);
-    cutoffEnv = cutoffEnv.abs.clip(20, SampleRate.ir / 2);
-    signal = RLPF.ar(signal, cutoffEnv, resonance.linexp(0, 1, 1, 0.001));
-    ReplaceOut.ar(out, signal)
+    ReplaceOut.ar(out, signal);
   }, [\ir, \kr, \kr, \kr]).add;
 
 	SynthDef("dirt_shape" ++ numChannels, { |out, shape = 0|

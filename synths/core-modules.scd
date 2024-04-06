@@ -127,6 +127,7 @@ this may be refacored later.
 				out: ~out,
         fattack: ~fattack,
         fdecay: ~fdecay,
+        sweep: ~sweep,
 		])
 }, { ~hcutoff.notNil });
 
@@ -139,6 +140,7 @@ this may be refacored later.
 				out: ~out,
         fattack: ~fattack,
         fdecay: ~fdecay,
+        sweep: ~sweep,
 		])
 
 }, { ~bandf.notNil });
@@ -171,7 +173,7 @@ this may be refacored later.
 				cutoff: ~cutoff,
 				resonance: ~resonance,
 				out: ~out,
-        cutoffTarget: ~cutoffTarget,
+        sweep: ~sweep,
         fattack: ~fattack,
         fdecay: ~fdecay,
 		])
