@@ -120,51 +120,38 @@ CORE SYNTHDEFS FOR DIRT
 
 			Out.ar(effectBus, signal);
 		}, [\ir, \ir]).add;
+
 	};
 
-
-	// thanks to Jost Muxfeld and James McCartney
-	// note that "size" is not room size, just the feed level into the room
-
-	SynthDef("dirt_reverb" ++ numChannels, { |dryBus, effectBus, gate = 1, room = 0, size = 0.1, dry = 0|
-		var in, snd, loop, depth;
-
-		in = In.ar(dryBus, numChannels).asArray.sum;
-
-		in = in * room.lag(LFNoise1.kr(1).range(0.01, 0.02)); // regulate input
-
-		4.do { in = AllpassN.ar(in, 0.03, { Rand(0.005, 0.02) }.dup(numChannels), 1) };
-
-		depth = size.lag(0.02).linexp(0, 1, 0.01, 0.98); // change depth between 0.1 and 0.98
-		loop = LocalIn.ar(numChannels) * { depth + Rand(0, 0.05) }.dup(numChannels);
-		loop = OnePole.ar(loop, 0.5);  // 0-1
-
-		loop = AllpassN.ar(loop, 0.05, { Rand(0.01, 0.05) }.dup(numChannels), 2);
-
-		loop = DelayN.ar(loop, 0.3, [0.19, 0.26] + { Rand(-0.003, 0.003) }.dup(2));
-		loop = AllpassN.ar(loop, 0.05, { Rand(0.03, 0.15) }.dup(numChannels), 2);
-
-		loop = loop + in;
-		loop = LeakDC.ar(loop);
-
-		LocalOut.ar(loop);
-
-		snd = loop;
-		snd = snd * (1 - dry).lag(LFNoise1.kr(1).range(0.01, 0.02));
-
-		DirtPause.ar(snd, graceTime:4);
-
-		snd = snd * EnvGen.kr(Env.asr, gate, doneAction:2);
-
-		Out.ar(effectBus, snd);
-
-	}, [\ir, \ir]).add;
-
+  SynthDef("dirt_reverb" ++ numChannels, { |dryBus, effectBus,
+      stereo = 0.5, gate = 1, room = 0, size = 0.1, dry = 0,
+      rmod = 0.2, rdepth = 0.3, low=200, lowr=0.5, high=400,
+      highr=0.5|
+      var in, wetSignal, drySignal, mixedSignal, env;
+      in = In.ar(dryBus, numChannels);
+      wetSignal = NHHall.ar(
+          in,
+          rt60: room.linlin(0, 1, 1, 10),
+          stereo: stereo.clip(0, 1),
+          lowFreq: low.clip(10, 20000),
+          lowRatio: lowr,
+          hiFreq: high.clip(10, 20000),
+          hiRatio: highr,
+          earlyDiffusion: size.linlin(0, 1, 0.5, 0.9),
+          lateDiffusion: size.linlin(0, 1, 0.5, 0.9),
+          modRate: rmod.clip(0.01, 0.99),
+          modDepth: rdepth.clip(0.01, 0.99)
+      );
+      drySignal = in;
+      mixedSignal = XFade2.ar(drySignal, wetSignal, dry * 2 - 1);
+      env = EnvGen.kr(Env.asr, gate, doneAction: 2);
+      mixedSignal = mixedSignal * env;
+      Out.ar(effectBus, mixedSignal);
+  }).add;
 
 	// "leslie" controls dry/wet
 	// "lrate" is the modulation rate (typical vintage rates would be 6.7 for "fast", 0.7 for "slow")
 	// "lsize" is the physical size of the cabinet in meters, this mostly affects the Doppler amount (pitch warble)
-
 	SynthDef("dirt_leslie" ++ numChannels, { |dryBus, effectBus, gate = 1, leslie=0.5, lrate=6.7, lsize=0.3|
 		var in, distance, throb, sound1, sound2, bal1, bal2, snd;
 

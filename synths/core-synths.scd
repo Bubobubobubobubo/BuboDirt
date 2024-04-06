@@ -225,14 +225,11 @@ live coding them requires that you have your SuperDirt instance in an environmen
 
 	}, [\ir]).add;
 
-	// would be nice to have some more parameters in some cases
-
 	SynthDef("dirt_crush" ++ numChannels, { |out, crush = 4|
 		var signal = In.ar(out, numChannels);
 		signal = signal.round(0.5 ** (crush-1));
 		ReplaceOut.ar(out, signal)
 	}, [\ir, \kr]).add;
-
 
 	SynthDef("dirt_coarse" ++ numChannels, { |out, coarse = 0, bandq = 10|
 		var signal = In.ar(out, numChannels);
@@ -240,23 +237,46 @@ live coding them requires that you have your SuperDirt instance in an environmen
 		ReplaceOut.ar(out, signal)
 	}, [\ir, \kr, \kr]).add;
 
-	SynthDef("dirt_hpf" ++ numChannels, { |out, hcutoff = 440, hresonance = 0|
-		var signal = In.ar(out, numChannels);
-		signal = RHPF.ar(signal, hcutoff.abs.clip(20, SampleRate.ir / 2), hresonance.linexp(0, 1, 1, 0.001));
-		ReplaceOut.ar(out, signal)
-	}, [\ir, \kr, \kr]).add;
+  SynthDef("dirt_hpf" ++ numChannels, { |
+      out, hcutoff = 440, cutoffTarget = 880,
+      fattack=0.01, fdecay = 0.5, hresonance = 0|
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var cutoffEnv = LinLin.kr(env, 0, 1, hcutoff, cutoffTarget);
+    signal = RHPF.ar(
+      signal,
+      cutoffEnv.abs.clip(20, SampleRate.ir / 2),
+      hresonance.linexp(0, 1, 1, 0.001)
+    );
+    ReplaceOut.ar(out, signal)
+  }, [\ir, \kr, \kr, \kr]).add;
 
-	SynthDef("dirt_bpf" ++ numChannels, { |out, bandqf = 440, bandq = 10|
-		var signal = In.ar(out, numChannels);
-		bandq = max(1, bandq);  // limit quality, avoid division by zero
-		bandqf = bandqf.clip(20, SampleRate.ir / 2); // limit extremes
-		signal = BPF.ar(signal, bandqf, 1/bandq) * max(bandq, 1.0);
-		ReplaceOut.ar(out, signal)
-	}, [\ir, \kr, \kr]).add;
+  SynthDef("dirt_bpf" ++ numChannels, { |
+      out, bandqf = 440, cutoffTarget = 880,
+      fattack=0.01, fdecay = 0.5, bandq = 10|
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var freqEnv = LinLin.kr(env, 0, 1, bandqf, cutoffTarget);
+    bandq = max(1, bandq);
+    freqEnv = freqEnv.clip(20, SampleRate.ir / 2);
+    signal = BPF.ar(signal, freqEnv, 1/bandq) * max(bandq, 1.0);
+    ReplaceOut.ar(out, signal)
+  }, [\ir, \kr, \kr, \kr]).add;
+
+  SynthDef("dirt_lpf" ++ numChannels, { |
+      out, cutoff = 440, cutoffTarget = 880,
+      fattack=0.01, fdecay = 0.5, resonance = 0|
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var cutoffEnv = LinLin.kr(env, 0, 1, cutoff, cutoffTarget);
+    cutoffEnv = cutoffEnv.abs.clip(20, SampleRate.ir / 2);
+    signal = RLPF.ar(signal, cutoffEnv, resonance.linexp(0, 1, 1, 0.001));
+    ReplaceOut.ar(out, signal)
+  }, [\ir, \kr, \kr, \kr]).add;
 
 	SynthDef("dirt_shape" ++ numChannels, { |out, shape = 0|
 		var signal = In.ar(out, numChannels), amp = 1;
-		shape = min(shape, 1.0 - 4e-10); // avoid division by zero
+		shape = min(shape, 1.0 - 4e-10);
 		//amp = 1.0 - (0.15 * shape / (shape + 2.0)) * amp; // optional gain comp
 		shape = (2.0 * shape) / (1.0 - shape);
 
@@ -264,18 +284,11 @@ live coding them requires that you have your SuperDirt instance in an environmen
 		ReplaceOut.ar(out, signal * amp)
 	}, [\ir, \kr]).add;
 
-	SynthDef("dirt_lpf" ++ numChannels, { |out, cutoff = 440, resonance = 0|
-		var signal = In.ar(out, numChannels);
-		signal = RLPF.ar(signal, cutoff.abs.clip(20, SampleRate.ir / 2), resonance.linexp(0, 1, 1, 0.001));
-		ReplaceOut.ar(out, signal)
-	}, [\ir, \kr, \kr]).add;
-
 	SynthDef("dirt_envelope" ++ numChannels, { |out, attack = 0, hold = 0, release = inf, curve = -3 |
 		var signal = In.ar(out, numChannels);
 		signal = signal * EnvGen.ar(Env.linen(attack, hold, release, 1, curve: curve));
 		ReplaceOut.ar(out, signal);
 	}, [\ir, \ir, \ir, \ir, \ir]).add;
-
 
 	SynthDef("dirt_grain_envelope" ++ numChannels, { |out, sustain = 1, tilt = 0.5, plat = 0, curve = -3 |
 		var signal = In.ar(out, numChannels);

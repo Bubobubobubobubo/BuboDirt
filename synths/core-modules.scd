@@ -23,7 +23,7 @@ This could be:
 - a sample that is played
 - a generic synth, which allows us to embed a SynthDef name in a tidal pattern next to sample names
 
-A SynthDef could receive any number of the parameters in the event, e.g.
+A SynthDef could receivb any number of the parameters in the event, e.g.
 sustain, speed, endSpeed, begin, end, pan, accelerate, offset, cps
 
 it ought to use "out" as bus output argument.
@@ -110,9 +110,10 @@ this may be refacored later.
 			[
 				hcutoff: ~hcutoff,
 				hresonance: ~hresonance,
-				out: ~out
+				out: ~out,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
 		])
-
 }, { ~hcutoff.notNil });
 
 ~dirt.addModule('bpf',
@@ -121,7 +122,9 @@ this may be refacored later.
 			[
 				bandqf: ~bandf,
 				bandq: ~bandq,
-				out: ~out
+				out: ~out,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
 		])
 
 }, { ~bandf.notNil });
@@ -153,7 +156,10 @@ this may be refacored later.
 			[
 				cutoff: ~cutoff,
 				resonance: ~resonance,
-				out: ~out
+				out: ~out,
+        cutoffTarget: ~cutoffTarget,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
 		])
 
 }, { ~cutoff.notNil });
