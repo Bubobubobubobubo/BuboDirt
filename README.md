@@ -1,4 +1,4 @@
-# BuboDirt
+# BuboDirt: SuperDirt for BuboBubo
 
 This is a slightly modified version of [SuperDirt](https://github.com/musikinformatik/SuperDirt). This is the setup I use to play with [Sardine](https://sardine.raphaelforment.fr). The documentation for the original SuperDirt still applies. I'm just adding synthesizers, effects and so on when the need arises.
 
@@ -10,6 +10,28 @@ There are a few optional dependencies that you might need to run this fork:
 collection from Mads Kjeldgaard of various UGens ported to SuperCollider
 
 # Additions
+
+
+## Analog Tape Module
+
+### Overview
+
+Simulates analog tape characteristics including warmth, saturation, and dynamic compression.
+
+### Parameters
+
+- **bias**: (`0.0 to 1.0`) Adjusts tape bias, affecting frequency response and distortion.
+- **tape**: (`0.0 to 1.0+`) Controls tape saturation level for harmonic distortion.
+- **tapeDrive**: (`0.0 to 1.0+`) Sets tape drive, influencing dynamic compression and distortion.
+- **oversample**: (`0` to `4`) Determines oversampling level (`0` = None, `4` = x16) for quality enhancement.
+
+### Example
+
+```haskell
+d1 $ sound "bd sn" # tape 0.7 # tapeDrive 0.8 # bias 0.5 # oversample 1
+```
+
+This applies analog tape effects with moderate saturation and drive, a balanced bias setting, and basic oversampling.
 
 ## Filter Envelope Parameters
 
