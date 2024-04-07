@@ -26,27 +26,6 @@ Simulates the secondary filter found on the Elektron Digitakt. Can act as a firs
 d1 $ sound "bd sn" # base 200 # width 500
 ```
 
-## Analog Tape Module
-
-### Overview
-
-Simulates analog tape characteristics including warmth, saturation, and dynamic compression.
-
-### Parameters
-
-- **bias**: (`0.0 to 1.0`) Adjusts tape bias, affecting frequency response and distortion.
-- **tape**: (`0.0 to 1.0+`) Controls tape saturation level for harmonic distortion.
-- **tapeDrive**: (`0.0 to 1.0+`) Sets tape drive, influencing dynamic compression and distortion.
-- **oversample**: (`0` to `4`) Determines oversampling level (`0` = None, `4` = x16) for quality enhancement.
-
-### Example
-
-```haskell
-d1 $ sound "bd sn" # tape 0.7 # tapeDrive 0.8 # bias 0.5 # oversample 1
-```
-
-This applies analog tape effects with moderate saturation and drive, a balanced bias setting, and basic oversampling.
-
 ## Filter Envelope Parameters
 
 ### Overview
@@ -109,3 +88,60 @@ To use these filters in your TidalCycles setup, you must specify the desired fil
 ```
 d1 $ sound "bd sn" # vlpf2 500 # resonance 0.8
 ```
+
+## Analog Tape Module
+
+### Overview
+
+Simulates analog tape characteristics including warmth, saturation, and dynamic compression.
+
+### Parameters
+
+- **bias**: (`0.0 to 1.0`) Adjusts tape bias, affecting frequency response and distortion.
+- **tape**: (`0.0 to 1.0+`) Controls tape saturation level for harmonic distortion.
+- **tapeDrive**: (`0.0 to 1.0+`) Sets tape drive, influencing dynamic compression and distortion.
+- **oversample**: (`0` to `4`) Determines oversampling level (`0` = None, `4` = x16) for quality enhancement.
+
+### Example
+
+```haskell
+d1 $ sound "bd sn" # tape 0.7 # tapeDrive 0.8 # bias 0.5 # oversample 1
+```
+
+This applies analog tape effects with moderate saturation and drive, a balanced bias setting, and basic oversampling.
+
+## Integration of Mutable Instruments Effects and Synthesizers
+
+### Synthesizers
+
+Some synth definitions taken from [here](https://tidalcycles.org/docs/reference/mi-ugens/#description).
+
+### MiVerb Module
+
+#### Overview
+
+Adds a lush, modulated reverb effect to the audio signal, simulating various environments from small rooms to vast spaces.
+
+#### Parameters
+
+- **miroom**: (`0.0 to 1.0`) Controls the reverb time, from short to long reverberation.
+- **misize**: (`0.0 to 1.0`) Adjusts the size of the simulated space.
+- **midry**: (`0.0 to 1.0`) Balances between the dry and wet signal.
+- **midamp**: (`0.0 to 1.0`) Sets the damping amount, affecting high frequency rolloff.
+- **mihp**: (`0.0 to 1.0`) Controls the high-pass filter frequency in the reverb's feedback path.
+- **mifreeze**: (`0 or 1`) Freezes the reverb for an infinite sustain effect.
+- **midiff**: (`0.0 to 1.0`) Adjusts the diffusion amount, influencing the smoothness of the reverb tail.
+
+#### Usage Example
+
+```haskell
+d1 $ s "drum*4" # miroom 0.5 # misize 0.1 # midry 0.5 # midamp 0.5 # mihp 0.05 # mifreeze 0 # midiff 0.625
+```
+
+This applies MiVerb with moderate room size and reverb time, balanced dry/wet mix, and some damping and diffusion.
+
+
+
+
+
+
