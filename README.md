@@ -11,6 +11,20 @@ collection from Mads Kjeldgaard of various UGens ported to SuperCollider
 
 # Additions
 
+## Base Width Filter
+
+Simulates the secondary filter found on the Elektron Digitakt. Can act as a first filter to clean a part of the spectrum before applying other effects. This filter is always active.
+
+### Parameters
+
+- **base**: (in hertz) Adjusts the base frequency for the filter. Anything below is high-passed.
+- **width**: (in hertz) Anything above base + width will be low-passed.
+
+### Example
+
+```haskell
+d1 $ sound "bd sn" # base 200 # width 500
+```
 
 ## Analog Tape Module
 
