@@ -2,6 +2,21 @@
 
 This is a slightly modified version of [SuperDirt](https://github.com/musikinformatik/SuperDirt). This is the setup I use to play with [Sardine](https://sardine.raphaelforment.fr). The documentation for the original SuperDirt still applies. I'm just adding synthesizers, effects and so on when the need arises.
 
+## Table of Contents
+
+- [Dependencies](#dependencies)
+- [Additions](#additions)
+  - [Base Width Filter](#base-width-filter)
+  - [Filter Envelope Parameters](#filter-envelope-parameters)
+  - [Vadim Filters](#vadim-filters)
+    - [Vadim LPF](#vadim-lpf-2-pole-and-4-pole-vlpf2-vlpf4)
+    - [Vadim BPF](#vadim-bpf-2-pole-and-4-pole-vbpf2-vbpf4)
+    - [Vadim HPF](#vadim-hpf-2-pole-and-4-pole-vhpf2-vhpf4)
+  - [Analog Tape Module](#analog-tape-module)
+  - [Mutable Instruments Synths & Effects](#integration-of-mutable-instruments-effects-and-synthesizers)
+    - [Synthesizers](#synthesizers)
+    - [MiVerb Module](#miverb-module)
+
 # Dependencies
 
 There are a few optional dependencies that you might need to run this fork:
