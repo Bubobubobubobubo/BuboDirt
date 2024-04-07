@@ -321,6 +321,119 @@ live coding them requires that you have your SuperDirt instance in an environmen
     ReplaceOut.ar(out, signal);
   }, [\ir, \kr, \kr, \kr]).add;
 
+  SynthDef("dirt_vadim_lpf_2" ++ numChannels, { |
+      out, freq = 500, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 1.0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20;
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    freqRange = sweep.linlin(-1, 1, freqMin - freq, freqMax - freq);
+    freqTarget = freq + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, freq, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
+    signal = VadimFilter.ar(signal, freqEnv, resonance, 0); // type 0 for LPF2
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+  
+  // dirt_vadim_lpf_4 - Low Pass Filter with 4-pole configuration
+  SynthDef("dirt_vadim_lpf_4" ++ numChannels, { |
+      out, freq = 500, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 1.0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20;
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    freqRange = sweep.linlin(-1, 1, freqMin - freq, freqMax - freq);
+    freqTarget = freq + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, freq, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
+    signal = VadimFilter.ar(signal, freqEnv, resonance, 1); // type 1 for LPF4
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+
+  // dirt_vadim_bpf_2 - Band Pass Filter with 2-pole configuration
+  SynthDef("dirt_vadim_bpf_2" ++ numChannels, { |
+      out, freq = 500, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 1.0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20;
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    freqRange = sweep.linlin(-1, 1, freqMin - freq, freqMax - freq);
+    freqTarget = freq + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, freq, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
+    signal = VadimFilter.ar(signal, freqEnv, resonance, 2); // type 2 for BPF2
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+  
+  // dirt_vadim_bpf_4 - Band Pass Filter with 4-pole configuration
+  SynthDef("dirt_vadim_bpf_4" ++ numChannels, { |
+      out, freq = 500, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 1.0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20;
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    freqRange = sweep.linlin(-1, 1, freqMin - freq, freqMax - freq);
+    freqTarget = freq + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, freq, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
+    signal = VadimFilter.ar(signal, freqEnv, resonance, 3); // type 3 for BPF4
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+  
+  // dirt_vadim_hpf_2 - High Pass Filter with 2-pole configuration
+  SynthDef("dirt_vadim_hpf_2" ++ numChannels, { |
+      out, freq = 500, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 1.0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20;
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    freqRange = sweep.linlin(-1, 1, freqMin - freq, freqMax - freq);
+    freqTarget = freq + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, freq, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
+    signal = VadimFilter.ar(signal, freqEnv, resonance, 4); // type 4 for HPF2
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+  
+  // dirt_vadim_hpf_4 - High Pass Filter with 4-pole configuration
+  SynthDef("dirt_vadim_hpf_4" ++ numChannels, { |
+      out, freq = 500, sweep = 0.5,
+      fattack = 0.01, fdecay = 0.5, resonance = 1.0 |
+    var signal = In.ar(out, numChannels);
+    var env = EnvGen.kr(Env.perc(fattack, fdecay), doneAction: 0);
+    var nyquist = SampleRate.ir / 2;
+    var freqMin = 20;
+    var freqMax = nyquist;
+    var freqRange, freqTarget, freqEnv;
+    freqRange = sweep.linlin(-1, 1, freqMin - freq, freqMax - freq);
+    freqTarget = freq + freqRange * sweep;
+    freqTarget = freqTarget.clip(freqMin, freqMax);
+    freqEnv = LinLin.kr(env, 0, 1, freq, freqTarget);
+    freqEnv = freqEnv.abs.clip(freqMin, nyquist);
+    signal = VadimFilter.ar(signal, freqEnv, resonance, 5); // type 5 for HPF4
+    ReplaceOut.ar(out, signal);
+  }, [\ir, \kr, \kr, \kr]).add;
+
 	SynthDef("dirt_shape" ++ numChannels, { |out, shape = 0|
 		var signal = In.ar(out, numChannels), amp = 1;
 		shape = min(shape, 1.0 - 4e-10);

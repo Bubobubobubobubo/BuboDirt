@@ -177,8 +177,91 @@ this may be refacored later.
         fattack: ~fattack,
         fdecay: ~fdecay,
 		])
-
 }, { ~cutoff.notNil });
+
+// Vadim LPF 2-pole
+~dirt.addModule('vlpf2',
+  { |dirtEvent|
+    dirtEvent.sendSynth("dirt_vadim_lpf_2" ++ ~numChannels,
+      [
+        freq: ~vlpf2, // Using freq to directly set cutoff frequency
+        resonance: ~resonance,
+        out: ~out,
+        sweep: ~sweep,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
+      ])
+}, { ~vlpf2.notNil });
+
+// Vadim LPF 4-pole
+~dirt.addModule('vlpf4',
+  { |dirtEvent|
+    dirtEvent.sendSynth("dirt_vadim_lpf_4" ++ ~numChannels,
+      [
+        freq: ~vlpf4, // Using freq for cutoff frequency
+        resonance: ~resonance,
+        out: ~out,
+        sweep: ~sweep,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
+      ])
+}, { ~vlpf4.notNil });
+
+// Vadim BPF 2-pole
+~dirt.addModule('vbpf2',
+  { |dirtEvent|
+    dirtEvent.sendSynth("dirt_vadim_bpf_2" ++ ~numChannels,
+      [
+        freq: ~vbpf2, // Using freq for center frequency
+        resonance: ~resonance,
+        out: ~out,
+        sweep: ~sweep,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
+      ])
+}, { ~vbpf2.notNil });
+
+// Vadim BPF 4-pole
+~dirt.addModule('vbpf4',
+  { |dirtEvent|
+    dirtEvent.sendSynth("dirt_vadim_bpf_4" ++ ~numChannels,
+      [
+        freq: ~vbpf4, // Using freq for center frequency
+        resonance: ~resonance,
+        out: ~out,
+        sweep: ~sweep,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
+      ])
+}, { ~vbpf4.notNil });
+
+// Vadim HPF 2-pole
+~dirt.addModule('vhpf2',
+  { |dirtEvent|
+    dirtEvent.sendSynth("dirt_vadim_hpf_2" ++ ~numChannels,
+      [
+        freq: ~vhpf2, // Using freq for cutoff frequency
+        resonance: ~resonance,
+        out: ~out,
+        sweep: ~sweep,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
+      ])
+}, { ~vhpf2.notNil });
+
+// Vadim HPF 4-pole
+~dirt.addModule('vhpf4',
+  { |dirtEvent|
+    dirtEvent.sendSynth("dirt_vadim_hpf_4" ++ ~numChannels,
+      [
+        freq: ~vhpf4, // Using freq for cutoff frequency
+        resonance: ~resonance,
+        out: ~out,
+        sweep: ~sweep,
+        fattack: ~fattack,
+        fdecay: ~fdecay,
+      ])
+}, { ~vhpf4.notNil });
 
 ~dirt.addModule('pshift',
 	{ |dirtEvent|
