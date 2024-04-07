@@ -39,17 +39,16 @@ d1 $ sound "bd*4" # lpf 500 # resonance 0.5 # fattack 0.05 # fdecay 0.2 # sweep 
 
 This applies an LPF filter, where the cutoff frequency quickly ramps up to the effect level and then gradually falls back, with a noticeable sweep in the cutoff frequency.
 
-### Conclusion
-
-Using `fattack`, `fdecay`, and `sweep` parameters, Vadim Filters allow for sophisticated control over sound modulation, enabling a wide range of dynamic effects from subtle to dramatic.
-
 ## Vadim Filters
 
-These filters leverage the VadimFilter UGen.
+These filters leverage the [Vadim Filters](https://www.native-instruments.com/fileadmin/ni_media/downloads/pdf/VAFilterDesign_1.1.1.pdf) from [PortedPlugins](https://github.com/madskjeldgaard/portedplugins).
 
 ### Vadim LPF 2-pole and 4-pole (vlpf2, vlpf4)
 
 These filters attenuate frequencies above a certain cutoff frequency, allowing lower frequencies to pass through. The 2-pole version offers a gentler slope compared to the 4-pole version, which provides a steeper cutoff.
+
+Note that the `freq` parameter should be replaced by the filter name (_e.g_
+`vlpf2`, `vlpf4`, etc). This applies for all new filters.
 
 Parameters:
 
@@ -61,19 +60,13 @@ Parameters:
 
 ### Vadim BPF 2-pole and 4-pole (vbpf2, vbpf4)
 
-These filters allow frequencies in a certain range to pass while attenuating frequencies outside this range. The 2-pole version offers a wider bandwidth, whereas the 4-pole version provides a narrower bandwidth, allowing for more selective frequency filtering.
-
-Parameters:
-
-Same as for the LPF filters, with freq now determining the center frequency of the band pass.
+Same parameters, but this filter type is a band-pass filter, which allows frequencies within a certain range to pass through.
 
 ### Vadim HPF 2-pole and 4-pole (vhpf2, vhpf4)
 
-These filters attenuate frequencies below a certain cutoff frequency, allowing higher frequencies to pass through. Similar to the LPF, the 2-pole version has a gentler slope, and the 4-pole version has a steeper cutoff.
+Same parameters, but this filter type is a high-pass filter, which attenuates frequencies below a certain cutoff frequency.
 
-Parameters:
-
-Same as for the LPF filters.
+### Example
 
 To use these filters in your TidalCycles setup, you must specify the desired filter and its parameters in your TidalCycles code. For example, to apply a Vadim LPF 2-pole filter with a cutoff frequency of 500 Hz and a resonance of 0.8, you would write:
 
