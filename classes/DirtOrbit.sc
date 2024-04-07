@@ -60,6 +60,9 @@ DirtOrbit {
 			GlobalDirtEffect(\dirt_delay, [\delaytime, \delayfeedback, \delaySend, \delayAmp, \lock, \cps]),
 			GlobalDirtEffect(\dirt_reverb, [\size, \room, \dry, \low,
         \stereo, \lowr, \high, \highr, \modr, \depthr]),
+      GlobalDirtEffect(\dirt_miverb, [
+          \miroom, \misize, \midry, \midamp, \mihp, \midiff, \mifreeze
+      ]),
   		GlobalDirtEffect(\dirt_leslie, [\leslie, \lrate, \lsize]),
 			GlobalDirtEffect(\dirt_rms, [\rmsReplyRate, \rmsPeakLag]).alwaysRun_(true),
 			GlobalDirtEffect(\dirt_monitor, [\limitertype]).alwaysRun_(true),

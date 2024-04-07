@@ -149,6 +149,27 @@ CORE SYNTHDEFS FOR DIRT
       Out.ar(effectBus, mixedSignal);
   }, [\ir, \ir]).add;
 
+  SynthDef("dirt_miverb" ++ numChannels, { |dryBus, effectBus,
+  miroom = 0.5, misize = 0.1, midry = 0.5, midamp = 0.5,
+  mihp = 0.05, mifreeze = 0, midiff = 0.625|
+      var in, wetSignal, drySignal, mixedSignal, env;
+      in = In.ar(dryBus, numChannels);
+      wetSignal = MiVerb.ar(
+          inputArray: in,
+          time: miroom.linlin(0, 1, 0.7, 1.25),
+          drywet: midry.clip(0, 1),
+          midamp: midamp.clip(0, 1),
+          mihp: mihp.clip(0, 1),
+          mifreeze: mifreeze.clip(0, 1),
+          diff: midiff.clip(0, 1),
+      );
+      drySignal = in;
+      mixedSignal = XFade2.ar(drySignal, wetSignal, midry * 2 - 1);
+      env = EnvGen.kr(Env.asr, gate: 1, doneAction: 2);
+      mixedSignal = mixedSignal * env;
+      Out.ar(effectBus, mixedSignal);
+  }).add;
+
 	// "leslie" controls dry/wet
 	// "lrate" is the modulation rate (typical vintage rates would be 6.7 for "fast", 0.7 for "slow")
 	// "lsize" is the physical size of the cabinet in meters, this mostly affects the Doppler amount (pitch warble)
